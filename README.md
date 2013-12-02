@@ -1,6 +1,7 @@
 PHP Punctis API
 =======================
-[![Build Status](https://travis-ci.org/populissrl/punctis-api-php.png?branch=master)](http://travis-ci.org/populissrl/punctis-api-php)
+[![Build Status](https://travis-ci.org/populissrl/punctis-api-php.png)](https://travis-ci.org/populissrl/punctis-api-php)
+
 
 Introduction
 ------------
