@@ -1,6 +1,6 @@
 PHP Punctis API
 =======================
-[![Build Status](https://travis-ci.org/grisou77/punctis-api-php.png?branch=master)](http://travis-ci.org/grisou77/punctis-api-php)
+[![Build Status](https://travis-ci.org/populissrl/punctis-api-php.png?branch=master)](http://travis-ci.org/populissrl/punctis-api-php)
 
 Introduction
 ------------
@@ -14,7 +14,7 @@ Cloning by GitHub (recommended)
 The recommended way to get a working copy of this project is to clone the repository from github: 
 
     cd my/project/dir
-    git clone https://github.com/grisou77/punctis-api-php
+    git clone https://github.com/populissrl/punctis-api-php
     cd my/project/dir/punctis-api-php
     composer.phar install
 
@@ -31,4 +31,4 @@ Usage example
     );
     $p = new \Populis\Punctis\Api($options);
 
-    echo "<pre>";
+    $catalog = $p->getCatalog();
