@@ -15,7 +15,7 @@ Cloning by GitHub (recommended)
 The recommended way to get a working copy of this project is to clone the repository from github: 
 
     cd my/project/dir
-    git clone https://github.com/populissrl/punctis-api-php
+    git clone https://github.com/Populissrl/punctis-api-php.git
     cd my/project/dir/punctis-api-php
     composer.phar install
 
