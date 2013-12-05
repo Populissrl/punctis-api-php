@@ -2,7 +2,7 @@
 
 namespace Populis\Punctis;
 use Populis\Punctis\Api\Exception as Exception;
-use stdClass;
+use Populis\Punctis\Api\Arguments;
 
 class Api
 {
@@ -113,7 +113,7 @@ class Api
             'auth-key' => $this->authKey,
             'auth-mode' => $this->authMode, 
             'brandcode' => $this->brandCode, 
-            'arguments' => json_encode($args[0]),
+            'arguments' => json_encode($args),
             'command' => $name
         );
         if ( $this->debugMode ) {
@@ -172,5 +172,74 @@ class Api
         return $this->curlOpt[$optName];
     }
     // }}} 
+
+    // {{{ getScore
+    /**
+     * get the user score
+     * 
+     * @access public
+     * @param string $email
+     * @return int
+     */
+    public function getScore($email)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $ret = 0;
+        $response = $this->__call('getScore', $args);
+        if ( $response->code == 1 ) {
+            if ( $response->response->score ) {
+                return $response->response->score;
+            }
+            return $ret;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
+    // {{{ getLegal
+    /**
+     * get the legals
+     * 
+     * @access public
+     * @param string $lang default 'it'
+     * @return int
+     */
+    public function getLegal($lang = 'it')
+    {
+        $args = new Arguments();
+        $args->lang = $lang;
+        $response = $this->__call('getLegal', $args);
+        if ( $response->code == 1 ) {
+            return $response->response->legal;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
+    // {{{ checkUser
+    /**
+     * check the user
+     * 
+     * @access public
+     * @param string $email
+     * @return int
+     */
+    public function checkUser($email)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $response = $this->__call('checkUser', $args);
+        if ( $response->code == 1 ) {
+            if ( $response->response->indb == 1 && $response->response->auth == 1 ) {
+                return 0;
+            } elseif ( $response->response->indb == 1 ) {
+                return 1;
+            } 
+            return 2;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
 
 }
