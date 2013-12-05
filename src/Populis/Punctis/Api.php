@@ -11,6 +11,7 @@ class Api
     private $brandCode = null;
     private $command = null;
     private $demoMode = false;
+    private $debugMode = false;
     private $serverUrl = null;
     private $internalCallData = array(); 
     private $curlOpt = array();
@@ -44,10 +45,12 @@ class Api
     private function _setDefaultOptions($opts)
     {
         $defaults = array(
-            'demoMode'  => false
+            'demoMode'  => false,
+            'debugMode'  => false
         );
         $requiredOptions = array(
             'demoMode'  => 'is_bool',
+            'debugMode' => 'is_bool',
             'authMode'  => 'is_string',
             'authKey'   => 'is_string',
             'brandCode' => 'is_string',
@@ -110,9 +113,12 @@ class Api
             'auth-key' => $this->authKey,
             'auth-mode' => $this->authMode, 
             'brandcode' => $this->brandCode, 
-            'arguments' => $args,
+            'arguments' => json_encode($args[0]),
             'command' => $name
         );
+        if ( $this->debugMode ) {
+            var_dump($this->internalCallData);
+        }
         
         try {
             $ch = curl_init();
@@ -124,7 +130,11 @@ class Api
                 curl_setopt($ch, $propertyName, $this->curlOpt[$propertyName]);
             }
             $output = curl_exec($ch);
-            $info = curl_getinfo($ch);
+            if ( $this->debugMode ) {
+                $info = curl_getinfo($ch);
+                var_dump($info); 
+                var_dump($output); 
+            }
             curl_close($ch);
             return json_decode($output);
         }
