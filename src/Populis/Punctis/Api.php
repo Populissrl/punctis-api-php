@@ -173,25 +173,50 @@ class Api
     }
     // }}} 
 
-    // {{{ getScore
+    // {{{ checkUser
     /**
-     * get the user score
+     * check the user
      * 
      * @access public
      * @param string $email
      * @return int
      */
-    public function getScore($email)
+    public function checkUser($email)
     {
         $args = new Arguments();
         $args->username = $email;
-        $ret = 0;
-        $response = $this->__call('getScore', $args);
+        $response = $this->__call('checkUser', $args);
         if ( $response->code == 1 ) {
-            if ( $response->response->score ) {
-                return $response->response->score;
-            }
-            return $ret;
+            if ( $response->response->indb == 1 && $response->response->auth == 1 ) {
+                return 0;
+            } elseif ( $response->response->indb == 1 ) {
+                return 1;
+            } 
+            return 2;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
+    // {{{ setUser
+    /**
+     * give points to Users
+     * 
+     * @access public
+     * @param string $email
+     * @param string $callbackUrl
+     * @param int $force default 0
+     * @return bool
+     */
+    public function setUser($email, $callbackUrl, $force = 0)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $args->callback = $callbackUrl;
+        $args->force = $force;
+        $response = $this->__call('setUser', $args);
+        if ( $response->code == 1 ) {
+            return true;
         }
         throw new Exception($response->response->description);
     }
@@ -217,26 +242,93 @@ class Api
     }
     // }}}
 
-    // {{{ checkUser
+    // {{{ redeemPrice
     /**
-     * check the user
+     * reedem an item from Catalog
+     * 
+     * @access public
+     * @param string $email
+     * @param int $idGift
+     * @return bool
+     */
+    public function redeemPrice($email, $idGift)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $args->gift = $idGift;
+        $response = $this->__call('redeemPrice', $args);
+        if ( $response->code == 1 ) {
+            return true;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
+    // {{{ setPoints
+    /**
+     * give points to Users
+     * 
+     * @access public
+     * @param string $email
+     * @param string $apiSecret
+     * @return bool
+     */
+    public function setPoints($email, $apiSecret)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $args->apisecret = $apiSecret;
+        $response = $this->__call('setPoints', $args);
+        if ( $response->code == 1 ) {
+            return true;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
+    // {{{ setSocialPoints
+    /**
+     * give points to Users based on social action
+     * 
+     * @access public
+     * @param string $email
+     * @param string $urlContent
+     * @param int $actionType
+     * @return bool
+     */
+    public function setSocialPoints($email, $urlContent, $actionType)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $args->url = $urlContent;
+        $args->action_type = $actionType;
+        $response = $this->__call('setSocialPoints', $args);
+        if ( $response->code == 1 ) {
+            return true;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
+    // {{{ getScore
+    /**
+     * get the user score
      * 
      * @access public
      * @param string $email
      * @return int
      */
-    public function checkUser($email)
+    public function getScore($email)
     {
         $args = new Arguments();
         $args->username = $email;
-        $response = $this->__call('checkUser', $args);
+        $ret = 0;
+        $response = $this->__call('getScore', $args);
         if ( $response->code == 1 ) {
-            if ( $response->response->indb == 1 && $response->response->auth == 1 ) {
-                return 0;
-            } elseif ( $response->response->indb == 1 ) {
-                return 1;
-            } 
-            return 2;
+            if ( $response->response->score ) {
+                return $response->response->score;
+            }
+            return $ret;
         }
         throw new Exception($response->response->description);
     }
