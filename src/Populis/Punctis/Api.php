@@ -88,7 +88,7 @@ class Api
             'getLegal',
             'getScore',
             'ping',
-            'redemPrice',
+            'redeemPrice',
             'setPoints',
             'setUser',
         );
