@@ -220,7 +220,11 @@ class Api
     // {{{ checkUser
     /**
      * check the user
-     * 
+     * return:
+     *     0 if the user is on the db and have authorized our brand
+     *     1 if is on the db but needs to authorize our brand (in this case for setUser we need to use force=1 parameter)
+     *     2 if isn't on punctis db
+     *
      * @access public
      * @param string $email
      * @return int
@@ -230,14 +234,16 @@ class Api
         $args = new Arguments();
         $args->username = $email;
         $response = $this->__call('checkUser', $args);
+        print_r($response);
         if ( $response->code == 1 ) {
             if ( $response->response->indb == 1 && $response->response->auth == 1 ) {
                 return 0;
             } elseif ( $response->response->indb == 1 ) {
                 return 1;
             } 
-            return 2;
+            throw new Exception('UNEXPECTED RESPONSE');
         }
+        return 2;
         throw new Exception($response->response->description);
     }
     // }}}
