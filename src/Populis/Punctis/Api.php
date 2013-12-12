@@ -234,7 +234,6 @@ class Api
         $args = new Arguments();
         $args->username = $email;
         $response = $this->__call('checkUser', $args);
-        print_r($response);
         if ( $response->code == 1 ) {
             if ( $response->response->indb == 1 && $response->response->auth == 1 ) {
                 return 0;
