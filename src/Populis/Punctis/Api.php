@@ -88,7 +88,7 @@ class Api
             'getLegal',
             'getScore',
             'ping',
-            'redemPrice',
+            'redeemPrice',
             'setPoints',
             'setUser',
         );
@@ -243,6 +243,74 @@ class Api
             throw new Exception('UNEXPECTED RESPONSE');
         }
         return 2;
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
+    // {{{ redeemPrice
+    /**
+     * reedem an item from Catalog
+     * 
+     * @access public
+     * @param string $email
+     * @param int $idGift
+     * @return bool
+     */
+    public function redeemPrice($email, $idGift)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $args->gift = $idGift;
+        $response = $this->__call('redeemPrice', $args);
+        if ( $response->code == 1 ) {
+            return true;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
+    // {{{ setPoints
+    /**
+     * give points to Users
+     * 
+     * @access public
+     * @param string $email
+     * @param string $apiSecret
+     * @return bool
+     */
+    public function setPoints($email, $apiSecret)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $args->apisecret = $apiSecret;
+        $response = $this->__call('setPoints', $args);
+        if ( $response->code == 1 ) {
+            return true;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
+    // {{{ setSocialPoints
+    /**
+     * give points to Users based on social action
+     * 
+     * @access public
+     * @param string $email
+     * @param string $urlContent
+     * @param int $actionType
+     * @return bool
+     */
+    public function setSocialPoints($email, $urlContent, $actionType)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $args->url = $urlContent;
+        $args->action_type = $actionType;
+        $response = $this->__call('setSocialPoints', $args);
+        if ( $response->code == 1 ) {
+            return true;
+        }
         throw new Exception($response->response->description);
     }
     // }}}
