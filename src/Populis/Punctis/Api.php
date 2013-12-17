@@ -27,9 +27,10 @@ class Api
     {
         $this->_setDefaultOptions($options);
         $this->serverUrl = 'http://punctis.com/api';
-        if ( $this->demoMode ) {
+        $this->serverUrl = 'http://demodev.punctis.it/api';
+        /*if ( $this->demoMode ) {
             $this->serverUrl = 'http://demodev.punctis.it/api';
-        }
+        }*/
         $this->curlOpt[CURLOPT_CONNECTTIMEOUT] = 5;
         $this->curlOpt[CURLOPT_TIMEOUT] = 15;
         $this->curlOpt[CURLOPT_DNS_CACHE_TIMEOUT] = 120;
