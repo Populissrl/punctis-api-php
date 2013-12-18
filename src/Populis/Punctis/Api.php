@@ -248,6 +248,30 @@ class Api
     }
     // }}}
 
+    // {{{ setUser
+    /**
+     * give points to Users
+     * 
+     * @access public
+     * @param string $email
+     * @param string $callbackUrl
+     * @param int $force default 0
+     * @return bool
+     */
+    public function setUser($email, $callbackUrl, $force = 0)
+    {
+        $args = new Arguments();
+        $args->username = $email;
+        $args->callback = $callbackUrl;
+        $args->force = $force;
+        $response = $this->__call('setUser', $args);
+        if ( $response->code == 1 ) {
+            return true;
+        }
+        throw new Exception($response->response->description);
+    }
+    // }}}
+
     // {{{ redeemPrice
     /**
      * reedem an item from Catalog
