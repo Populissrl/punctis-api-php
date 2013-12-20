@@ -27,7 +27,7 @@ class Api
     {
         $this->_setDefaultOptions($options);
         $this->serverUrl = 'http://punctis.com/api';
-        $this->serverUrl = 'http://demodev.punctis.it/api';
+        //$this->serverUrl = 'http://demodev.punctis.it/api';
         /*if ( $this->demoMode ) {
             $this->serverUrl = 'http://demodev.punctis.it/api';
         }*/
@@ -114,9 +114,16 @@ class Api
             'auth-key' => $this->authKey,
             'auth-mode' => $this->authMode, 
             'brandcode' => $this->brandCode, 
-            'arguments' => json_encode($args),
+            'arguments' => json_encode($args['args']),
             'command' => $name
         );
+        if (!empty($args['objs'])) {
+            foreach ($args['objs'] as $key => $value) {
+                if (!in_array($key, $this->internalCallData)) {
+                    $this->internalCallData[$key] = $value;
+                }
+            }
+        }
         if ( $this->debugMode ) {
             var_dump($this->internalCallData);
         }
@@ -187,7 +194,7 @@ class Api
         $args = new Arguments();
         $args->username = $email;
         $ret = 0;
-        $response = $this->__call('getScore', $args);
+        $response = $this->__call('getScore', array('args' => $args));
         if ( $response->code == 1 ) {
             if ( $response->response->score ) {
                 return $response->response->score;
@@ -210,7 +217,7 @@ class Api
     {
         $args = new Arguments();
         $args->lang = $lang;
-        $response = $this->__call('getLegal', $args);
+        $response = $this->__call('getLegal', array('args' => $args));
         if ( $response->code == 1 ) {
             return $response->response->legal;
         }
@@ -234,9 +241,9 @@ class Api
     {
         $args = new Arguments();
         $args->username = $email;
-        $response = $this->__call('checkUser', $args);
+        $response = $this->__call('checkUser', array('args' => $args));
         if ( $response->code == 1 ) {
-            if ( $response->response->indb == 1 && $response->response->auth == 1 ) {
+            if ( isset($response->response->indb) && $response->response->indb == 1 && $response->response->auth == 1 ) {
                 return 0;
             } elseif ( $response->response->indb == 1 ) {
                 return 1;
@@ -255,16 +262,19 @@ class Api
      * @access public
      * @param string $email
      * @param string $callbackUrl
+     * @param string $legal
      * @param int $force default 0
      * @return bool
      */
-    public function setUser($email, $callbackUrl, $force = 0)
+    public function setUser($email, $callbackUrl, $legal, $force = 0)
     {
         $args = new Arguments();
         $args->username = $email;
         $args->callback = $callbackUrl;
         $args->force = $force;
-        $response = $this->__call('setUser', $args);
+        $args->legal = $legal;
+        $response = $this->__call('setUser', array('args' => $args, 'objs' => array('legal' => $legal)));
+        return $response;
         if ( $response->code == 1 ) {
             return true;
         }
@@ -286,7 +296,7 @@ class Api
         $args = new Arguments();
         $args->username = $email;
         $args->gift = $idGift;
-        $response = $this->__call('redeemPrice', $args);
+        $response = $this->__call('redeemPrice', array('args' => $args));
         if ( $response->code == 1 ) {
             return true;
         }
@@ -308,7 +318,7 @@ class Api
         $args = new Arguments();
         $args->username = $email;
         $args->apisecret = $apiSecret;
-        $response = $this->__call('setPoints', $args);
+        $response = $this->__call('setPoints', array('args' => $args));
         if ( $response->code == 1 ) {
             return true;
         }
@@ -332,7 +342,7 @@ class Api
         $args->username = $email;
         $args->url = $urlContent;
         $args->action_type = $actionType;
-        $response = $this->__call('setSocialPoints', $args);
+        $response = $this->__call('setSocialPoints', array('args' => $args));
         if ( $response->code == 1 ) {
             return true;
         }
