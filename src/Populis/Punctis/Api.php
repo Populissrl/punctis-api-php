@@ -92,6 +92,7 @@ class Api
             'redeemPrice',
             'setPoints',
             'setUser',
+            'setSocialPoints',
         );
         return in_array($command, $validCommands);
     }
